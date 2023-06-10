@@ -15,9 +15,11 @@ func NewTransaction(id string, amount float64, date time.Time) (*Transaction, er
 	if id == "" {
 		return nil, errors.New("id cannot be empty")
 	}
+
 	if amount == 0 {
 		return nil, errors.New("amount cannot be empty")
 	}
+
 	if date.IsZero() {
 		return nil, errors.New("date cannot be empty")
 	}

@@ -8,13 +8,15 @@ type TransactionsSummary struct {
 	numberOfTransactionsPerMonth []int   // 12 months
 }
 
+const MONTHS = 12
+
 func NewTransactionSummary(user *User, transactions []Transaction) *TransactionsSummary {
 	summary := &TransactionsSummary{
 		user:                         user,
 		total:                        0,
 		avarageCredit:                0,
 		avarageDebit:                 0,
-		numberOfTransactionsPerMonth: make([]int, 12),
+		numberOfTransactionsPerMonth: make([]int, MONTHS),
 	}
 
 	summary.CalculateAverageCredit(transactions)
@@ -49,6 +51,7 @@ func (t *TransactionsSummary) CalculateNumberofTransactionsPerMonth(transactions
 	for _, transaction := range transactions {
 		t.numberOfTransactionsPerMonth[transaction.Date().Month()]++
 	}
+
 	return t.numberOfTransactionsPerMonth
 }
 
@@ -65,6 +68,7 @@ func (t *TransactionsSummary) CalculateAverageCredit(transactions []Transaction)
 			t.avarageCredit += transaction.Amount()
 		}
 	}
+
 	return t.avarageCredit
 }
 
@@ -74,5 +78,6 @@ func (t *TransactionsSummary) CalculateAverageDebit(transactions []Transaction) 
 			t.avarageDebit += transaction.Amount()
 		}
 	}
+
 	return t.avarageDebit
 }
