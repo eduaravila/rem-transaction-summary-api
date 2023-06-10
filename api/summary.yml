@@ -1,0 +1,147 @@
+openapi: 3.0.0
+info:
+  title: Transactions Summary
+  version: 0.0.1
+  description: |
+    API to register user, transactions and get a summary of the transactions
+  contact:
+    name: Eduardo Avila
+    email: contact@eduaravila.com
+servers:
+  - url: http://{hostname}/api
+    description: local server
+    variables:
+      hostname:
+        default: localhost:3000
+        description: localhost
+paths:
+  /users:
+    post:
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'              
+      responses:
+        '201':
+          description: user created
+          content:
+            application/json:              
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '409':
+          description: user already exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/{userId}/transactions/summary:
+    get:
+      operationId: getTransactions
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: transactions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionSummaryResponse'
+        '404':
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/{userId}/transactions:
+    post:
+      operationId: createTransaction
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date: 
+                  type: string
+                  format: date-time
+                amount:
+                  type: number
+              required:
+                - date
+                - amount 
+      responses:
+        '201':
+          description: transaction created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactionId:
+                    type: string
+        '404':
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+      required:
+        - email
+        - name      
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+    UserResponse:
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          properties:
+            id:
+              type: string              
+    TransactionSummaryResponse:
+      type: object
+      properties:
+        summaryId:
+          type: string
+        status: 
+          type: string
+          enum: [pending, completed]
+        data: 
+          type: object
+          properties:
+            notificationId: 
+              type: string
+            recipient:
+              type: string
+            timestamp:
+              type: string
+              format: date-time           
