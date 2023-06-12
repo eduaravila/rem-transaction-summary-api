@@ -1,9 +1,13 @@
 package domain
 
+import (
+	"time"
+)
+
 type TransactionsSummary struct {
 	user                         *User
 	total                        float64 // add debit and credit
-	avarageCredit                float64 // + (plus) add to credit
+	averageCredit                float64 // + (plus) add to credit
 	avarageDebit                 float64 // - (minus) add to debit
 	numberOfTransactionsPerMonth []int   // 12 months
 }
@@ -14,16 +18,15 @@ func NewTransactionSummary(user *User, transactions []Transaction) *Transactions
 	summary := &TransactionsSummary{
 		user:                         user,
 		total:                        0,
-		avarageCredit:                0,
+		averageCredit:                0,
 		avarageDebit:                 0,
 		numberOfTransactionsPerMonth: make([]int, MONTHS),
 	}
 
-	summary.CalculateAverageCredit(transactions)
-	summary.CalculateAverageDebit(transactions)
-	summary.CalculateTotal(transactions)
-	summary.CalculateNumberofTransactionsPerMonth(transactions)
-
+	summary.calculateAverageCredit(transactions)
+	summary.calculateAverageDebit(transactions)
+	summary.calculateTotal(transactions)
+	summary.calculateNumberofTransactionsPerMonth(transactions)
 	return summary
 }
 
@@ -36,7 +39,7 @@ func (t *TransactionsSummary) Total() float64 {
 }
 
 func (t *TransactionsSummary) AvarageCredit() float64 {
-	return t.avarageCredit
+	return t.averageCredit
 }
 
 func (t *TransactionsSummary) AvarageDebit() float64 {
@@ -47,37 +50,59 @@ func (t *TransactionsSummary) NumberOfTransactionsPerMonth() []int {
 	return t.numberOfTransactionsPerMonth
 }
 
-func (t *TransactionsSummary) CalculateNumberofTransactionsPerMonth(transactions []Transaction) []int {
+func (t *TransactionsSummary) calculateNumberofTransactionsPerMonth(transactions []Transaction) []int {
 	for _, transaction := range transactions {
-		t.numberOfTransactionsPerMonth[transaction.Date().Month()]++
+		month, _ := time.Parse(time.RFC3339, transaction.Date())
+		t.numberOfTransactionsPerMonth[month.Month()]++
 	}
 
 	return t.numberOfTransactionsPerMonth
 }
 
-func (t *TransactionsSummary) CalculateTotal(transactions []Transaction) float64 {
+func (t *TransactionsSummary) calculateTotal(transactions []Transaction) float64 {
 	for _, transaction := range transactions {
 		t.total += transaction.Amount()
 	}
+
 	return t.total
 }
 
-func (t *TransactionsSummary) CalculateAverageCredit(transactions []Transaction) float64 {
+func (t *TransactionsSummary) calculateAverageCredit(transactions []Transaction) float64 {
+	var totalTransactions int
+
 	for _, transaction := range transactions {
 		if transaction.Amount() > 0 {
-			t.avarageCredit += transaction.Amount()
+			totalTransactions++
+
+			t.averageCredit += transaction.Amount()
 		}
 	}
 
-	return t.avarageCredit
+	if totalTransactions < 1 {
+		return 0
+	}
+
+	t.averageCredit = t.averageCredit / float64(totalTransactions)
+
+	return t.averageCredit
 }
 
-func (t *TransactionsSummary) CalculateAverageDebit(transactions []Transaction) float64 {
+func (t *TransactionsSummary) calculateAverageDebit(transactions []Transaction) float64 {
+	var totalTransactions int
+
 	for _, transaction := range transactions {
 		if transaction.Amount() < 0 {
+			totalTransactions++
+
 			t.avarageDebit += transaction.Amount()
 		}
 	}
+
+	if totalTransactions < 1 {
+		return 0
+	}
+
+	t.avarageDebit = t.avarageDebit / float64(totalTransactions)
 
 	return t.avarageDebit
 }

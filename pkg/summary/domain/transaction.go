@@ -2,14 +2,15 @@ package domain
 
 import (
 	"errors"
+	"math"
 	"strconv"
 	"time"
 )
 
 type Transaction struct {
 	id     string
+	date   string
 	amount float64
-	date   time.Time
 }
 
 func NewTransaction(id string, amount float64, date time.Time) (*Transaction, error) {
@@ -27,8 +28,8 @@ func NewTransaction(id string, amount float64, date time.Time) (*Transaction, er
 
 	return &Transaction{
 		id:     id,
-		amount: amount,
-		date:   date,
+		date:   date.Format(time.RFC3339),    // format to RFC3339
+		amount: math.Floor(amount*100) / 100, // round to 2 decimals
 	}, nil
 }
 
@@ -40,19 +41,19 @@ func (t *Transaction) Amount() float64 {
 	return t.amount
 }
 
-func (t *Transaction) Date() time.Time {
+func (t *Transaction) Date() string {
 	return t.date
 }
 
 func DecodeTransactionFromCSV(record []string) (*Transaction, error) {
 	id := record[0]
-	amountToFloat, err := strconv.ParseFloat(record[1], 64)
+	amountToFloat, err := strconv.ParseFloat(record[2], 64)
 
 	if err != nil {
 		return nil, err
 	}
 
-	timeToTime, err := time.Parse(time.RFC3339, record[2])
+	timeToTime, err := time.Parse(time.RFC3339, record[1])
 
 	if err != nil {
 		return nil, errors.New("error parsing date")

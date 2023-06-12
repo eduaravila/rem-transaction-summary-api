@@ -23,12 +23,12 @@ type Error struct {
 // TransactionSummaryResponse defines model for TransactionSummaryResponse.
 type TransactionSummaryResponse struct {
 	Data *struct {
-		NotificationId *string    `json:"notificationId,omitempty"`
-		Recipient      *string    `json:"recipient,omitempty"`
-		Timestamp      *time.Time `json:"timestamp,omitempty"`
+		NotificationId string    `json:"notificationId"`
+		Recipient      string    `json:"recipient"`
+		Timestamp      time.Time `json:"timestamp"`
 	} `json:"data,omitempty"`
-	Status    *TransactionSummaryResponseStatus `json:"status,omitempty"`
-	SummaryId *string                           `json:"summaryId,omitempty"`
+	Status    TransactionSummaryResponseStatus `json:"status"`
+	SummaryId string                           `json:"summaryId"`
 }
 
 // TransactionSummaryResponseStatus defines model for TransactionSummaryResponse.Status.

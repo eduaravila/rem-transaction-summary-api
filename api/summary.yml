@@ -131,9 +131,9 @@ components:
       type: object
       properties:
         summaryId:
-          type: string
+          type: string                    
         status: 
-          type: string
+          type: string          
           enum: [pending, completed]
         data: 
           type: object
@@ -144,4 +144,11 @@ components:
               type: string
             timestamp:
               type: string
-              format: date-time           
+              format: date-time
+          required:
+            - notificationId
+            - recipient
+            - timestamp
+      required:
+        - summaryId
+        - status

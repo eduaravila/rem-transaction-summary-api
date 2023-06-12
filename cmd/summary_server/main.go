@@ -10,9 +10,8 @@ import (
 )
 
 func main() {
-
 	storageType := os.Getenv("STORAGE_TYPE")
-	port := os.Getenv("PORT")
+	port := os.Getenv("SUMMARY_PORT")
 
 	if port == "" {
 		port = "8080"

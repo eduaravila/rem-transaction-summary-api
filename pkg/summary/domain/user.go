@@ -32,6 +32,14 @@ func (u *User) ID() string {
 	return u.id
 }
 
+func (u *User) Name() string {
+	return u.name
+}
+
+func (u *User) Email() string {
+	return u.email
+}
+
 func DecodeUserFromCSV(record []string) (*User, error) {
 	return NewUser(record[0], record[1], record[2])
 }
