@@ -12,16 +12,27 @@ type TransactionsForUser struct {
 }
 
 type TransactionsSummaryHandler struct {
-	summaryStorage domain.Storage
+	summaryStorage      domain.Storage
+	notificationService NotificationsService
 }
 
-func NewTransactionsSummaryHandler(summaryStorage domain.Storage) *TransactionsSummaryHandler {
-	return &TransactionsSummaryHandler{
+type NotificationsService interface {
+	Send(email string, message string) error
+}
+
+func NewTransactionsSummaryHandler(
+	summaryStorage domain.Storage,
+	notificationService NotificationsService,
+) TransactionsSummaryHandler {
+	return TransactionsSummaryHandler{
 		summaryStorage: summaryStorage,
 	}
 }
 
-func (t *TransactionsSummaryHandler) Handle(ctx context.Context, query TransactionsForUser) (*domain.TransactionsSummary, error) {
+func (t *TransactionsSummaryHandler) Handle(
+	ctx context.Context,
+	query TransactionsForUser,
+) (*domain.TransactionsSummary, error) {
 	user, err := t.summaryStorage.GetUser(ctx, query.UserID)
 
 	if err != nil {

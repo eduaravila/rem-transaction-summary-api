@@ -17,8 +17,10 @@ type RegisterTransactionHandler struct {
 	summaryStorage domain.Storage
 }
 
-func NewRegisterTransactionHandler(summaryStorage domain.Storage) *RegisterTransactionHandler {
-	return &RegisterTransactionHandler{
+func NewRegisterTransactionHandler(
+	summaryStorage domain.Storage,
+) RegisterTransactionHandler {
+	return RegisterTransactionHandler{
 		summaryStorage: summaryStorage,
 	}
 }

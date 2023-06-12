@@ -5,9 +5,9 @@ import (
 	"github.com/eduaravila/stori-challenge/pkg/summary/app/query"
 )
 
-type Appliclation struct {
-	query    Queries
-	commands Commands
+type Application struct {
+	Queries  Queries
+	Commands Commands
 }
 
 type Queries struct {

@@ -16,8 +16,8 @@ type AddUserHandler struct {
 	summaryStorage domain.Storage
 }
 
-func NewAddUserHandler(summaryStorage domain.Storage) *AddUserHandler {
-	return &AddUserHandler{
+func NewAddUserHandler(summaryStorage domain.Storage) AddUserHandler {
+	return AddUserHandler{
 		summaryStorage: summaryStorage,
 	}
 }

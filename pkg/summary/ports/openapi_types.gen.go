@@ -49,8 +49,8 @@ type UserResponse struct {
 
 // CreateTransactionJSONBody defines parameters for CreateTransaction.
 type CreateTransactionJSONBody struct {
-	Amount float32   `json:"amount"`
-	Date   time.Time `json:"date"`
+	Amount float32            `json:"amount"`
+	Date   openapi_types.Date `json:"date"`
 }
 
 // CreateUserJSONRequestBody defines body for CreateUser for application/json ContentType.
