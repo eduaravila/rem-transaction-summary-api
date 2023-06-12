@@ -56,10 +56,11 @@ func NewEmailNotification() EmailNotification {
 }
 
 func (e EmailNotification) Send(user *domain.User, transactionSummary *domain.TransactionsSummary) error {
-	// SMTP server details
+	// SMTP serverdetails
 	smtpHost := os.Getenv("SUMMARY_SMTP_HOST")
 	smtpPort := os.Getenv("SUMMARY_SMTP_PORT")
 	senderEmail := os.Getenv("SUMMARY_SUPPORT_EMAIL")
+	senderUser := os.Getenv("SUMMARY_SUPPORT_USER")
 	senderPhone := os.Getenv("SUMMARY_SUPPORT_PHONE")
 	senderPassword := os.Getenv("SUMMARY_SUPPORT_EMAIL_PASSWORD")
 	recipientEmail := user.Email()
@@ -92,17 +93,18 @@ func (e EmailNotification) Send(user *domain.User, transactionSummary *domain.Tr
 	htmlContent := buff.String()
 
 	// Compose the email message
-	message := subject + "\r\n" +
+	message := "From: " + senderEmail + "\n" +
+		"Subject: " + subject + "\r\n" +
 		"MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n" +
 		htmlContent
 
 	// Set up authentication
-	auth := smtp.PlainAuth("", senderEmail, senderPassword, smtpHost)
+	auth := smtp.PlainAuth("", senderUser, senderPassword, smtpHost)
 
 	// Send the email
 	err = smtp.SendMail(smtpHost+":"+smtpPort, auth, senderEmail, []string{recipientEmail}, []byte(message))
 
-	fmt.Println(err)
+	fmt.Println(err, recipientEmail, senderEmail, senderPassword, smtpHost, smtpPort, auth)
 
 	if err != nil {
 		slog.Error(err.Error())
