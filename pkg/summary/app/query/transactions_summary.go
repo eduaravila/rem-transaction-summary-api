@@ -2,7 +2,6 @@ package query
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/eduaravila/stori-challenge/internal/errors"
 	"github.com/eduaravila/stori-challenge/pkg/summary/domain"
@@ -49,8 +48,9 @@ func (t *TransactionsSummaryHandler) Handle(
 
 	summary := domain.NewTransactionSummary(user, transactions)
 
-	err = t.notificationService.Send(user, summary)
-	fmt.Println(err)
-	return summary, nil
+	go func() {
+		t.notificationService.Send(user, summary)
+	}()
 
+	return summary, nil
 }

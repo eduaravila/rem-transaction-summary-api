@@ -27,6 +27,7 @@ func NewTransactionSummary(user *User, transactions []Transaction) *Transactions
 	summary.calculateAverageDebit(transactions)
 	summary.calculateTotal(transactions)
 	summary.calculateNumberofTransactionsPerMonth(transactions)
+
 	return summary
 }
 

@@ -104,8 +104,6 @@ func (e EmailNotification) Send(user *domain.User, transactionSummary *domain.Tr
 	// Send the email
 	err = smtp.SendMail(smtpHost+":"+smtpPort, auth, senderEmail, []string{recipientEmail}, []byte(message))
 
-	fmt.Println(err, recipientEmail, senderEmail, senderPassword, smtpHost, smtpPort, auth)
-
 	if err != nil {
 		slog.Error(err.Error())
 
