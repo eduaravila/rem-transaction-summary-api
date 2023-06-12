@@ -2,7 +2,6 @@ package ports
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -96,7 +95,7 @@ func (h *HTTPServer) GetTransactions(w http.ResponseWriter, r *http.Request, use
 		UserID: userID,
 	})
 
-	summaryID := uuid.NewString()
+	// summaryID := uuid.NewString()
 
 	if err != nil {
 		slog.Error(err.Error())
@@ -105,19 +104,19 @@ func (h *HTTPServer) GetTransactions(w http.ResponseWriter, r *http.Request, use
 		return
 	}
 
-	summaryResponse := &TransactionSummaryResponse{
-		Status: Completed,
-		Data: &struct {
-			NotificationId string    `json:"notificationId"`
-			Recipient      string    `json:"recipient"`
-			Timestamp      time.Time `json:"timestamp"`
-		}{
-			NotificationId: summaryID,
-			Recipient:      userID,
-			Timestamp:      time.Now(),
-		},
-		SummaryId: summaryID,
-	}
+	// summaryResponse := &TransactionSummaryResponse{
+	// 	Status: Completed,
+	// 	Data: &struct {
+	// 		NotificationId string    `json:"notificationId"`
+	// 		Recipient      string    `json:"recipient"`
+	// 		Timestamp      time.Time `json:"timestamp"`
+	// 	}{
+	// 		NotificationId: summaryID,
+	// 		Recipient:      userID,
+	// 		Timestamp:      time.Now(),
+	// 	},
+	// 	SummaryId: summaryID,
+	// }
 
 	summaryR := map[string]any{
 		"averageCredit":          summary.AvarageCredit(),
@@ -125,10 +124,7 @@ func (h *HTTPServer) GetTransactions(w http.ResponseWriter, r *http.Request, use
 		"transactions per month": summary.NumberOfTransactionsPerMonth(),
 	}
 
-	fmt.Println(summary.AvarageCredit(), summaryResponse, summaryR, summary.AvarageDebit())
-
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(summaryR)
-
 }

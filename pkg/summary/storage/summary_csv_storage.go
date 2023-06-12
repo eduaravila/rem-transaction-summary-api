@@ -72,7 +72,6 @@ func NewSummaryCSVStorageWithDefaultPath() (*SummaryCSVStorage, error) {
 }
 
 func (s *SummaryCSVStorage) AddTransaction(ctx context.Context, t *domain.Transaction, user *domain.User) error {
-	fmt.Println(t)
 	return s.WriteToFile(ctx, transactionsCSVHeaders, structToCSVArray(*t), s.getTransactionsPath(user.ID()))
 }
 

@@ -17,7 +17,7 @@ type TransactionsSummaryHandler struct {
 }
 
 type NotificationsService interface {
-	Send(email string, message string) error
+	Send(user *domain.User, transactionSummary *domain.TransactionsSummary) error
 }
 
 func NewTransactionsSummaryHandler(
@@ -25,7 +25,8 @@ func NewTransactionsSummaryHandler(
 	notificationService NotificationsService,
 ) TransactionsSummaryHandler {
 	return TransactionsSummaryHandler{
-		summaryStorage: summaryStorage,
+		summaryStorage:      summaryStorage,
+		notificationService: notificationService,
 	}
 }
 
@@ -45,5 +46,10 @@ func (t *TransactionsSummaryHandler) Handle(
 		return nil, errors.NewSlugError(err.Error(), "transactions-not-found")
 	}
 
-	return domain.NewTransactionSummary(user, transactions), nil
+	summary := domain.NewTransactionSummary(user, transactions)
+
+	t.notificationService.Send(user, summary)
+
+	return summary, nil
+
 }
