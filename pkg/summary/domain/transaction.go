@@ -2,6 +2,7 @@ package domain
 
 import (
 	"errors"
+	"strconv"
 	"time"
 )
 
@@ -41,4 +42,21 @@ func (t *Transaction) Amount() float64 {
 
 func (t *Transaction) Date() time.Time {
 	return t.date
+}
+
+func DecodeTransactionFromCSV(record []string) (*Transaction, error) {
+	id := record[0]
+	amountToFloat, err := strconv.ParseFloat(record[1], 64)
+
+	if err != nil {
+		return nil, err
+	}
+
+	timeToTime, err := time.Parse(time.RFC3339, record[2])
+
+	if err != nil {
+		return nil, errors.New("error parsing date")
+	}
+
+	return NewTransaction(id, amountToFloat, timeToTime)
 }

@@ -11,10 +11,10 @@ type Appliclation struct {
 }
 
 type Queries struct {
-	TransactionsSummaryQuery query.TransactionsSummaryQuery
+	TransactionsSummaryQuery query.TransactionsSummaryHandler
 }
 
 type Commands struct {
-	AddUser             command.AddUser
-	RegisterTransaction command.RegisterTransaction
+	AddUser             command.AddUserHandler
+	RegisterTransaction command.RegisterTransactionHandler
 }

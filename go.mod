@@ -1,4 +1,4 @@
-module github.com/eduaravila/stori-challenge/pkg/summary
+module github.com/eduaravila/stori-challenge
 
 go 1.20
 
