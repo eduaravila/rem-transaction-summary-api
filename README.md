@@ -84,3 +84,11 @@ Transaction table
 - POST /users - 201 Created
   - body: { name: "John Doe", email: "example@example.com" }
   - res: { id: int, name: string, email: string }
+
+
+## generating openapi types and server
+
+```bash
+    make openapi_http
+```
+

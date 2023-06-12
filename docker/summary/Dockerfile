@@ -27,11 +27,9 @@ FROM base as prod
 ENV ENV=production
 # create dir for the binary
 
-RUN ls -la
+WORKDIR /summary_server
 
-WORKDIR /summary_server/cmd/summary_server
-
-RUN  go build -o .
+RUN  go build cmd/summary_server/main.go
 
 # execute the binary
-CMD [ "./summary_server" ]
+CMD [ "./main" ]

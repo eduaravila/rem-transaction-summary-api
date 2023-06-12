@@ -88,8 +88,6 @@ func (e EmailNotification) Send(user *domain.User, transactionSummary *domain.Tr
 		return err
 	}
 
-	tmplt.Execute(buff, emailSummaryData)
-
 	htmlContent := buff.String()
 
 	// Compose the email message
