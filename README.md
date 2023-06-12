@@ -92,3 +92,77 @@ Transaction table
     make openapi_http
 ```
 
+## test 
+
+```bash
+    make test
+```
+
+## update docker image
+
+```bash
+    docker tag  summary registry.digitalocean.com/money-transfer/summary
+```
+
+## push docker image
+
+```bash
+    docker push registry.digitalocean.com/money-transfer/summary
+```
+
+
+## (REST API), quick guide
+
+> **Warning**
+> the process to receive a mail is, create user -> add transactions to the user -> get summary of user transactions
+
+
+### get summary of user transactions
+
+```bash
+  curl --request GET \
+  --url http://localhost:3000/api/users/067bdf1c-ac8f-4cb5-9eb0-be7bb4df8442/transactions/summary
+```
+
+```json
+{"data":{"notificationId":"e84d45f4-381d-475e-a781-0ae13a45e5ea","recipient":"067bdf1c-ac8f-4cb5-9eb0-be7bb4df8442","timestamp":"2023-06-12T22:59:43.511501337Z"},"status":"completed","summaryId":"e84d45f4-381d-475e-a781-0ae13a45e5ea"}    
+```
+
+![email](./email.png)
+> example of email sent
+
+### create user
+
+```bash
+curl --request POST \
+  --url http://localhost:3000/api/users \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"email":"me@eduaravila.com",
+	"name":"eduardo"
+}'
+```
+
+```json
+{"email":"me@eduaravila.com","id":"b37d988b-0df5-4d10-977c-f401d5045ae3","name":"eduardo"}
+```
+
+
+### create transaction
+
+```bash
+curl --request POST \
+  --url http://localhost:3000/api/users/b37d988b-0df5-4d10-977c-f401d5045ae3/transactions \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"date": "2006-01-02",
+	"amount": 10.2323
+}'
+```
+
+```
+  200 OK
+```
+
+
+

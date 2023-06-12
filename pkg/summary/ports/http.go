@@ -91,11 +91,11 @@ func (h *HTTPServer) CreateTransaction(w http.ResponseWriter, r *http.Request, u
 }
 
 func (h *HTTPServer) GetTransactions(w http.ResponseWriter, r *http.Request, userID string) {
-	summary, err := h.app.Queries.TransactionsSummaryQuery.Handle(r.Context(), query.TransactionsForUser{
+	_, err := h.app.Queries.TransactionsSummaryQuery.Handle(r.Context(), query.TransactionsForUser{
 		UserID: userID,
 	})
 
-	// summaryID := uuid.NewString()
+	summaryID := uuid.NewString()
 
 	if err != nil {
 		slog.Error(err.Error())
@@ -104,27 +104,21 @@ func (h *HTTPServer) GetTransactions(w http.ResponseWriter, r *http.Request, use
 		return
 	}
 
-	// summaryResponse := &TransactionSummaryResponse{
-	// 	Status: Completed,
-	// 	Data: &struct {
-	// 		NotificationId string    `json:"notificationId"`
-	// 		Recipient      string    `json:"recipient"`
-	// 		Timestamp      time.Time `json:"timestamp"`
-	// 	}{
-	// 		NotificationId: summaryID,
-	// 		Recipient:      userID,
-	// 		Timestamp:      time.Now(),
-	// 	},
-	// 	SummaryId: summaryID,
-	// }
-
-	summaryR := map[string]any{
-		"averageCredit":          summary.AvarageCredit(),
-		"averageDebit":           summary.AvarageDebit(),
-		"transactions per month": summary.NumberOfTransactionsPerMonth(),
+	summaryResponse := &TransactionSummaryResponse{
+		Status: Completed,
+		Data: &struct {
+			NotificationId string    `json:"notificationId"`
+			Recipient      string    `json:"recipient"`
+			Timestamp      time.Time `json:"timestamp"`
+		}{
+			NotificationId: summaryID,
+			Recipient:      userID,
+			Timestamp:      time.Now(),
+		},
+		SummaryId: summaryID,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(summaryR)
+	json.NewEncoder(w).Encode(summaryResponse)
 }
